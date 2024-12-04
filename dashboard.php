@@ -310,8 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const breadProducts = document.querySelector('.bread-products');
     const orderListDiv = document.getElementById('order-list');
     const confirmButton = document.querySelector('.cnfrm-btn');
-    const totalPaymentInput = document.getElementById('amount-received'); 
-    const removeOrderButton = document.querySelector('.rmv-btn'); 
+    const totalPaymentInput = document.getElementById('amount-received');
+    const removeOrderButton = document.querySelector('.rmv-btn');
 
     let totalAmount = 0;
 
@@ -328,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
         breadProducts.style.display = 'grid';
     });
 
-    // Add product to the order list
     function addToOrder(event) {
         const productContainer = event.currentTarget;
         const productName = productContainer.dataset.name;
@@ -337,18 +336,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productName && productPrice) {
             const orderItem = document.createElement('div');
             orderItem.classList.add('order-item');
-            orderItem.innerHTML = `
-                <p>${productName} - ₱${productPrice.toFixed(2)}</p>
-                <button class="rmv-item-btn">Remove</button>
-            `;
+            orderItem.innerHTML = `<p>${productName} - ₱${productPrice.toFixed(2)}</p>
+                                   <button class="rmv-item-btn">Remove</button>`;
 
-            // Add the order item to the list
             orderListDiv.appendChild(orderItem);
 
-            // Add event listener to the "Remove" button inside the order item
             const removeButton = orderItem.querySelector('.rmv-item-btn');
             removeButton.addEventListener('click', () => {
-                removeItem(orderItem, productPrice); // Remove the item and update total
+                removeOrderItem(orderItem, productPrice);
             });
 
             totalAmount += productPrice;
@@ -356,12 +351,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update the total payment field with the new total
-    function updateTotalPaymentInput() {
-        totalPaymentInput.value = totalAmount.toFixed(2); 
+    function removeOrderItem(orderItem, productPrice) {
+        orderItem.remove();
+        totalAmount -= productPrice;
+        updateTotalPaymentInput();
     }
 
-    // Initialize the event listeners for all product items
+    function updateTotalPaymentInput() {
+        totalPaymentInput.value = totalAmount.toFixed(2);
+    }
+
     function initializeProductListeners() {
         const productItems = document.querySelectorAll('.product');
         productItems.forEach(product => {
@@ -369,17 +368,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to remove an item from the order
-    function removeItem(orderItem, itemPrice) {
-        orderListDiv.removeChild(orderItem); // Remove the specific order item
-        totalAmount -= itemPrice; // Subtract the item's price from the total amount
-        updateTotalPaymentInput(); // Update the total payment input
-    }
-
-    // Initialize product listeners
     initializeProductListeners();
 
-    // Confirm order logic
+    removeOrderButton.addEventListener('click', () => {
+        orderListDiv.innerHTML = '';
+        totalAmount = 0;
+        updateTotalPaymentInput();
+    });
+
     confirmButton.addEventListener('click', function (event) {
         event.preventDefault();
 
@@ -399,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('orderForm').submit();
     });
 });
+
 
 
 
