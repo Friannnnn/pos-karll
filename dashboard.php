@@ -233,13 +233,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h2 class="header">Selection</h2>
       <div class="coffee-products">
         <?php
-        $coffeeQuery = "SELECT product_name, product_price, product_image FROM products WHERE category = 'Coffee'";
+        $coffeeQuery = "SELECT product_name, product_price, image_path FROM products WHERE category = 'Coffee'";
         $coffeeResult = $conn->query($coffeeQuery);
         if ($coffeeResult && $coffeeResult->num_rows > 0) {
             while ($row = $coffeeResult->fetch_assoc()) {
                 echo '
-                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['product_image']) . '">
-                    <img class="img2" src="assets/' . htmlspecialchars($row['product_image']) . '" alt="Coffee">
+                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['image_path']) . '">
+                    <img class="img2" src="assets/' . htmlspecialchars($row['image_path']) . '" alt="Coffee">
                     <h2>' . htmlspecialchars($row['product_name']) . '</h2>
                     <div class="price">₱' . number_format($row['product_price'], 2) . '</div>
                 </div>';
@@ -252,13 +252,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <div class="bread-products">
         <?php
-        $breadQuery = "SELECT product_name, product_price, product_image FROM products WHERE category = 'Bread'";
+        $breadQuery = "SELECT product_name, product_price, image_path FROM products WHERE category = 'Bread'";
         $breadResult = $conn->query($breadQuery);
         if ($breadResult && $breadResult->num_rows > 0) {
             while ($row = $breadResult->fetch_assoc()) {
                 echo '
-                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['product_image']) . '">
-                    <img class="img2" src="assets/' . htmlspecialchars($row['product_image']) . '" alt="Bread">
+                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['image_path']) . '">
+                    <img class="img2" src="assets/' . htmlspecialchars($row['image_path']) . '" alt="Bread">
                     <h2>' . htmlspecialchars($row['product_name']) . '</h2>
                     <div class="price">₱' . number_format($row['product_price'], 2) . '</div>
                 </div>';
