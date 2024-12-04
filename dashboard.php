@@ -1,13 +1,14 @@
+
+
 <?php
 session_start();
 include 'dbcon.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will run
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderItems = isset($_POST['orderItems']) ? $_POST['orderItems'] : [];
     $paymentMethod = isset($_POST['paymentMethod']) ? $_POST['paymentMethod'] : '';
     $totalPayment = isset($_POST['totalPayment']) ? $_POST['totalPayment'] : '';
 
-    // put data into array for receipt
     $_SESSION['orderDetails'] = [
         'items' => $orderItems,
         'paymentMethod' => $paymentMethod,
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will r
     <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Varela+Round&display=swap" rel="stylesheet"/>
 </head>
 <style>
-  body {
+    body {
     font-family: Karla, Arial, sans-serif;
   }
   
@@ -216,6 +217,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will r
     margin: 0;
     font-size: 16px;
   }
+
+
 </style>
 <body>
 <div class="container">
@@ -230,13 +233,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will r
       <h2 class="header">Selection</h2>
       <div class="coffee-products">
         <?php
-        $coffeeQuery = "SELECT product_name, product_price FROM products WHERE category = 'Coffee'"; //seletcs product on coffee catehory
+        $coffeeQuery = "SELECT product_name, product_price, product_image FROM products WHERE category = 'Coffee'";
         $coffeeResult = $conn->query($coffeeQuery);
         if ($coffeeResult && $coffeeResult->num_rows > 0) {
             while ($row = $coffeeResult->fetch_assoc()) {
                 echo '
-                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '">
-                    <img class="img2" src="assets/4.jpg" alt="Coffee">
+                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['product_image']) . '">
+                    <img class="img2" src="' . htmlspecialchars($row['image_path']) . '" alt="Coffee">
                     <h2>' . htmlspecialchars($row['product_name']) . '</h2>
                     <div class="price">₱' . number_format($row['product_price'], 2) . '</div>
                 </div>';
@@ -249,13 +252,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will r
 
       <div class="bread-products">
         <?php
-        $breadQuery = "SELECT product_name, product_price FROM products WHERE category = 'Bread'"; //seletcs product on bread category
+        $breadQuery = "SELECT product_name, product_price, product_image FROM products WHERE category = 'Bread'";
         $breadResult = $conn->query($breadQuery);
         if ($breadResult && $breadResult->num_rows > 0) {
             while ($row = $breadResult->fetch_assoc()) {
                 echo '
-                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '">
-                    <img class="img2" src="assets/5.jpg" alt="Bread">
+                <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['product_image']) . '">
+                    <img class="img2" src="assets/' . htmlspecialchars($row['product_image']) . '" alt="Bread">
                     <h2>' . htmlspecialchars($row['product_name']) . '</h2>
                     <div class="price">₱' . number_format($row['product_price'], 2) . '</div>
                 </div>';
@@ -273,36 +276,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { //if confirm is clicked this will r
     </div>
     <div class="right">
       <h2>Order List</h2>
-      <h5><?php echo "$_SESSION[selection]"; ?></h5>
       <div id="order-list"></div>
       <div class="payment-section">
-    <h3>Payment Received:</h3> 
-    <input type="number" id="amount-received" class="total-input" value="0.00" step="0.01" min="0.00" />
-    <h4>Select Payment Method</h4>
-    <div class="payment-methods">
-        <label>
-            <input type="radio" name="payment-method" value="card"> Card
-        </label>
-        <label>
-            <input type="radio" name="payment-method" value="Gcash"> Gcash
-        </label>
-        <label>
-            <input type="radio" name="payment-method" value="cash"> Cash
-        </label>
-    </div>
-</div>
+        <h3>Payment Received:</h3> 
+        <input type="number" id="amount-received" class="total-input" value="0.00" step="0.01" min="0.00" />
+        <h4>Select Payment Method</h4>
+        <div class="payment-methods">
+            <label>
+                <input type="radio" name="payment-method" value="card"> Card
+            </label>
+            <label>
+                <input type="radio" name="payment-method" value="Gcash"> Gcash
+            </label>
+            <label>
+                <input type="radio" name="payment-method" value="cash"> Cash
+            </label>
+        </div>
+      </div>
+
       <form action="receipt.php" method="POST" id="orderForm">
-
-    <input type="hidden" id="orderData" name="orderData" value="">
-    <input type="hidden" id="paymentMethod" name="paymentMethod" value="">
-    <input type="hidden" id="totalPayment" name="totalPayment" value="">
-
-    <button type="submit" class="cnfrm-btn">Confirm Order</button>
-</form>
+        <input type="hidden" id="orderData" name="orderData" value="">
+        <input type="hidden" id="paymentMethod" name="paymentMethod" value="">
+        <input type="hidden" id="totalPayment" name="totalPayment" value="">
+        <button type="submit" class="cnfrm-btn">Confirm Order</button>
+      </form>
     </div>
 </div>
 
-  <script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
     const coffeeCategoryLink = document.querySelector('.left h3:nth-of-type(1)');
     const breadCategoryLink = document.querySelector('.left h3:nth-of-type(2)');
@@ -332,12 +333,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const productContainer = event.currentTarget;
         const productName = productContainer.dataset.name;
         const productPrice = parseFloat(productContainer.dataset.price);
+        const productImage = productContainer.dataset.image;
 
-        if (productName && productPrice) {
+        if (productName && productPrice && productImage) {
             const orderItem = document.createElement('div');
             orderItem.classList.add('order-item');
-            orderItem.innerHTML = `<p>${productName} - ₱${productPrice.toFixed(2)}</p>
-                                   <button class="rmv-item-btn">Remove</button>`;
+            orderItem.innerHTML = `
+                <img src="assets/${productImage}" alt="${productName}" class="order-item-image" />
+                <p>${productName} - ₱${productPrice.toFixed(2)}</p>
+                <button class="rmv-item-btn">Remove</button>
+            `;
 
             orderListDiv.appendChild(orderItem);
 
@@ -395,13 +400,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('orderForm').submit();
     });
 });
-
-
-
-
-
-
-
-  </script>
+</script>
 </body>
 </html>
