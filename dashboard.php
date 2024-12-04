@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             while ($row = $coffeeResult->fetch_assoc()) {
                 echo '
                 <div class="product" data-name="' . htmlspecialchars($row['product_name']) . '" data-price="' . number_format($row['product_price'], 2) . '" data-image="' . htmlspecialchars($row['product_image']) . '">
-                    <img class="img2" src="assets/' . htmlspecialchars($row['image_path']) . '" alt="Coffee">
+                    <img class="img2" src="assets/' . htmlspecialchars($row['product_image']) . '" alt="Coffee">
                     <h2>' . htmlspecialchars($row['product_name']) . '</h2>
                     <div class="price">₱' . number_format($row['product_price'], 2) . '</div>
                 </div>';
