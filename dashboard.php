@@ -330,31 +330,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function addToOrder(event) {
-        const productContainer = event.currentTarget;
-        const productName = productContainer.dataset.name;
-        const productPrice = parseFloat(productContainer.dataset.price);
-        const productImage = productContainer.dataset.image;
+    const productContainer = event.currentTarget;
+    const productName = productContainer.dataset.name;
+    const productPrice = parseFloat(productContainer.dataset.price);
 
-        if (productName && productPrice && productImage) {
-            const orderItem = document.createElement('div');
-            orderItem.classList.add('order-item');
-            orderItem.innerHTML = `
-                <img src="assets/${productImage}" alt="${productName}" class="order-item-image" />
-                <p>${productName} - ₱${productPrice.toFixed(2)}</p>
-                <button class="rmv-item-btn">Remove</button>
-            `;
+    if (productName && productPrice) {
+        const orderItem = document.createElement('div');
+        orderItem.classList.add('order-item');
+        orderItem.innerHTML = `
+            <p>${productName} - ₱${productPrice.toFixed(2)}</p>
+            <button class="rmv-item-btn">Remove</button>
+        `;
 
-            orderListDiv.appendChild(orderItem);
+        orderListDiv.appendChild(orderItem);
 
-            const removeButton = orderItem.querySelector('.rmv-item-btn');
-            removeButton.addEventListener('click', () => {
-                removeOrderItem(orderItem, productPrice);
-            });
+        const removeButton = orderItem.querySelector('.rmv-item-btn');
+        removeButton.addEventListener('click', () => {
+            removeOrderItem(orderItem, productPrice);
+        });
 
-            totalAmount += productPrice;
-            updateTotalPaymentInput();
-        }
+        totalAmount += productPrice;
+        updateTotalPaymentInput();
     }
+}
+
 
     function removeOrderItem(orderItem, productPrice) {
         orderItem.remove();
