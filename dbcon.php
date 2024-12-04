@@ -1,5 +1,5 @@
 <?php 
 
-$conn = new mysqli('localhost','root','','dbpos');
+$conn = new mysqli('localhost','root','','dbposkrl');
 
 ?>
